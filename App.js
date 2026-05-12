@@ -1,49 +1,81 @@
+import React, { useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ImageBackground,
+  TouchableOpacity,
+  StatusBar,
   ScrollView,
 } from "react-native";
-import GameCard from "./components/GameCard";
+import { gameUtils, organizarJogos } from "./assets/utils/gameUtils";
 import dados from "./assets/dados.json";
+import DiaCard from "./components/Diacard";
 
 export default function App() {
-  const jogos = dados.jogos;
+  const [favoritos, setFavoritos] = useState([]);
+  const [grupoSelecionado, setGrupoSelecionado] = useState(null);
 
-  const agruparPorData = (jogos) => {
-    return jogos.reduce((acc, jogo) => {
-      const data = jogo.data_brasilia;
+  const hoje = new Date().toISOString().split("T")[0];
 
-      if (!acc[data]) {
-        acc[data] = [];
-      }
-
-      acc[data].push(jogo);
-      return acc;
-    }, {});
+  const toggleFavorito = (id) => {
+    setFavoritos((prev) =>
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
+    );
   };
 
-  const jogosAgrupados = agruparPorData(jogos);
+  const jogosAgrupados = useMemo(() => {
+    return organizarJogos(dados.jogos, grupoSelecionado);
+  }, [grupoSelecionado]);
+
+  const grupos = [...new Set(dados.jogos.map((j) => j.grupo))].sort();
 
   return (
     <ImageBackground style={styles.container}>
+      <StatusBar barStyle="light-content" />
       <Image style={styles.logo} source={require("./assets/unicopa.png")} />
-
       <Text style={styles.title}>CALENDÁRIO</Text>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {Object.entries(jogosAgrupados).map(([data, jogosDoDia]) => (
-          <View style={styles.card} key={data}>
-            <Text style={styles.data}>
-              {data.split("-").slice(1).reverse().join("/")}
-            </Text>
+      <View style={styles.filterBar}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={[
+              styles.filterBtn,
+              !grupoSelecionado && styles.filterBtnActive,
+            ]}
+            onPress={() => setGrupoSelecionado(null)}
+          >
+            <Text style={styles.filterText}>Todos</Text>
+          </TouchableOpacity>
+          {grupos.map((g) => (
+            <TouchableOpacity
+              key={g}
+              style={[
+                styles.filterBtn,
+                grupoSelecionado === g && styles.filterBtnActive,
+              ]}
+              onPress={() => setGrupoSelecionado(g)}
+            >
+              <Text style={styles.filterText}>{g}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-            {jogosDoDia.map((jogo, index) => (
-              <GameCard key={index} game={jogo} />
-            ))}
-          </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        {Object.entries(jogosAgrupados).map(([data, jogosDoDia]) => (
+          <DiaCard
+            key={data}
+            data={data}
+            jogos={jogosDoDia}
+            isHoje={data === hoje}
+            favoritos={favoritos}
+            onToggleFavorito={toggleFavorito}
+          />
         ))}
       </ScrollView>
     </ImageBackground>
@@ -51,34 +83,23 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#040b13",
-    alignItems: "center",
+  container: { flex: 1, backgroundColor: "#040b13", alignItems: "center" },
+  logo: { marginTop: 50, width: 200, height: 50, resizeMode: "contain" },
+  title: { marginTop: 10, fontSize: 28, fontWeight: "700", color: "white" },
+  filterBar: {
+    flexDirection: "row",
+    marginVertical: 15,
+    paddingHorizontal: 10,
+    height: 40,
   },
-  logo: {
-    marginTop: 20,
-    width: 200,
-    height: 50,
-    resizeMode: "contain",
+  filterBtn: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: "#1a2a3a",
+    marginHorizontal: 5,
+    justifyContent: "center",
   },
-  title: {
-    marginTop: 10,
-    fontSize: 28,
-    fontWeight: "700",
-    color: "white",
-  },
-  card: {
-    marginTop: 20,
-    backgroundColor: "#0c1b2a",
-    width: 320,
-    borderRadius: 12,
-    padding: 15,
-  },
-  data: {
-    color: "#f2cc2f",
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+  filterBtnActive: { backgroundColor: "#f2cc2f" },
+  filterText: { color: "white", fontWeight: "bold" },
 });

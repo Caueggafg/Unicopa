@@ -1,6 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-
-export default function GameCard({ game }) {
+export default function GameCard({ game, isFavorito }) {
   const flags = {
     MEX: require("../assets/jogos/mexico.png"),
     RSA: require("../assets/jogos/south africa.png"),
@@ -22,9 +21,15 @@ export default function GameCard({ game }) {
 
   return (
     <View style={styles.jogo}>
-      <Text style={styles.grupo}>
-        GRUPO {game.grupo} {game.confronto}
-      </Text>
+      <View style={styles.header}>
+        <Text style={styles.grupo}>
+          GRUPO {game.grupo} {game.confronto}
+        </Text>
+
+        <Text style={[styles.star, isFavorito && styles.starActive]}>
+          {isFavorito ? "★" : "☆"}
+        </Text>
+      </View>
 
       <View style={styles.linhaPrincipal}>
         <View style={styles.time}>
@@ -60,10 +65,23 @@ const styles = StyleSheet.create({
     borderBottomColor: "#1e2d3d",
     paddingBottom: 15,
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
   grupo: {
     color: "#8fa3b8",
     fontSize: 12,
-    marginBottom: 10,
+  },
+
+  star: {
+    fontSize: 20,
+    color: "#8fa3b8",
+  },
+  starActive: {
+    color: "#f2cc2f",
   },
   linhaPrincipal: {
     flexDirection: "row",
@@ -74,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    width: 80,
   },
   bandeira: {
     width: 28,
@@ -87,6 +106,7 @@ const styles = StyleSheet.create({
   },
   horario: {
     alignItems: "center",
+    flex: 1,
   },
   hora: {
     color: "white",
