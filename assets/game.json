@@ -1,0 +1,35 @@
+[
+  {
+    "id": "game-001",
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "description": "Aventura em mundo aberto no reino de Hyrule.",
+    "genre": "Aventura",
+    "platform": "Nintendo Switch",
+    "image_url": "https://example.com/zelda.jpg",
+    "release_year": 2017,
+    "developer": "Nintendo",
+    "rating": 9.8
+  },
+  {
+    "id": "game-002",
+    "title": "God of War",
+    "description": "Kratos e seu filho Atreus em uma jornada épica.",
+    "genre": "Ação",
+    "platform": "PlayStation 4",
+    "image_url": "https://example.com/gow.jpg",
+    "release_year": 2018,
+    "developer": "Santa Monica Studio",
+    "rating": 9.5
+  },
+  {
+    "id": "game-003",
+    "title": "Hollow Knight",
+    "description": "Metroidvania desafiador no reino subterrâneo de Hallownest.",
+    "genre": "Metroidvania",
+    "platform": "Multi-plataforma",
+    "image_url": "https://example.com/hollow.jpg",
+    "release_year": 2017,
+    "developer": "Team Cherry",
+    "rating": 9.3
+  }
+]

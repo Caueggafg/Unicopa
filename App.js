@@ -12,6 +12,25 @@ import {
 import { gameUtils, organizarJogos } from "./assets/utils/gameUtils";
 import dados from "./assets/dados.json";
 import DiaCard from "./components/Diacard";
+import games from "./assets/game.json";
+import { supabase } from "./services/supabase";
+
+export async function importarJogos() {
+  try {
+    const { error } = await supabase.from("jogos").upsert(games, {
+      onConflict: "id",
+    });
+
+    if (error) {
+      console.log("Erro:", error.message);
+      return;
+    }
+
+    console.log("Jogos importados com sucesso!");
+  } catch (err) {
+    console.log("Erro inesperado:", err);
+  }
+}
 
 export default function App() {
   const [favoritos, setFavoritos] = useState([]);

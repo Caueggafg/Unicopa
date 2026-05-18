@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, } from "react-native";
 export default function GameCard({ game, isFavorito }) {
   const flags = {
     MEX: require("../assets/jogos/mexico.png"),
@@ -17,19 +17,27 @@ export default function GameCard({ game, isFavorito }) {
     MAR: require("../assets/jogos/morocco.png"),
     QAT: require("../assets/jogos/qatar.png"),
     SUI: require("../assets/jogos/switzerland.png"),
+    GER: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
+    SUI: require("../assets/jogos/switzerland.png"),
   };
 
-  return (
-    <View style={styles.jogo}>
-      <View style={styles.header}>
-        <Text style={styles.grupo}>
-          GRUPO {game.grupo} {game.confronto}
-        </Text>
+  const temBrasil = game.sigla_casa === "BRA" || game.sigla_fora === "BRA";
 
-        <Text style={[styles.star, isFavorito && styles.starActive]}>
-          {isFavorito ? "★" : "☆"}
-        </Text>
-      </View>
+  return (
+    <View style={[styles.jogo, temBrasil && styles.jogoBrasil]}>
+      <Text style={styles.grupo}>
+        GRUPO {game.grupo} {game.confronto}
+      </Text>
+
+      {temBrasil && <Text style={styles.badgeBrasil}>🇧🇷 Jogo do Brasil</Text>}
 
       <View style={styles.linhaPrincipal}>
         <View style={styles.time}>
@@ -65,23 +73,23 @@ const styles = StyleSheet.create({
     borderBottomColor: "#1e2d3d",
     paddingBottom: 15,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
+  jogoBrasil: {
+    backgroundColor: "#0d2b1a",
+    borderRadius: 8,
+    padding: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: "#009C3B",
+  },
+  badgeBrasil: {
+    color: "#009C3B",
+    fontSize: 11,
+    fontWeight: "bold",
+    marginBottom: 6,
   },
   grupo: {
     color: "#8fa3b8",
     fontSize: 12,
-  },
-
-  star: {
-    fontSize: 20,
-    color: "#8fa3b8",
-  },
-  starActive: {
-    color: "#f2cc2f",
+    marginBottom: 10,
   },
   linhaPrincipal: {
     flexDirection: "row",
@@ -92,7 +100,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    width: 80,
   },
   bandeira: {
     width: 28,
@@ -106,7 +113,6 @@ const styles = StyleSheet.create({
   },
   horario: {
     alignItems: "center",
-    flex: 1,
   },
   hora: {
     color: "white",
